@@ -65,31 +65,63 @@ foreign key (cod_peca) references peca (cod_peca));
 
 insert into cliente(cod_clien,nome,endereco,cidade,telefone) values 
 (1,'Luiz','Rua: Professor Filgueira, nº17','Jaquarepaguá','(21)3659-5046'),
-(2,'Cleison','Rua: Cordura ,nº698','Ipanema','(21)2369-5541');
+(2,'Cleison','Rua: Cordura ,nº698','Ipanema','(21)2369-5541'),
+(3,'Messi','Rua: Carmela Dutra,nº 698','Barcelona','(21)99955-2222');
 
 insert into peca(cod_peca,nome,preco,quant) values 
-(050,'Cano de descarga',150,8),
-(060,'Painel',800,30);
+(1,'Cano de descarga',150,8),
+(2,'Roda',200,6),
+(3,'Mola',800,30);
 
 insert into veiculo (placa,ano,cor,marca,modelo,descri,cod_clien) values 
 ('FIT-3863','2017','Preta','Mercedes-benz','Mercedes-AMG G 63','Cano de descarga furado',1),
+('luw-5554','2017','Branco','Fiat','Palio','Roda quebrada',3),
 ('KAT-5534','2016','Cinza','Wolkswagen','Passat','Painel ruim',2);
 
 insert into servico (cod_serv,cod_clien,cod_peca,placa,dataentrada) values
-(1056,2,050,'KAT-5534','10/05/2018'),
-(0057,1,060,'FIT-3863','22/12/2018');
+(100,2,1,'KAT-5534','01/01/2019'),
+(103,1,3,'FIT-3863','22/01/2019'),
+(105,3,2,'luw-5554','04/02/2019');
 
 insert into mao_de_obra (cod_mao,hora_trab,especi,cod_serv,preco) values
- (024,'5hrs','mecanico',1056,500),
- (025,'10hrs','lanterneiro',0057,600);
+ (024,'5hrs','mecanico',100,50),
+ (025,'10hrs','lanterneiro',103,150),
+ (026,'3hrs','mecanico',105,200);
  
  insert into executa (cod_exe,cod_mao,cod_serv) values
-(78,'024','1056'),
-(79,'025','0057');
+(78,'024','100'),
+(79,'025','103'),
+(80,'026','105');
 
 insert into usa (codusa,cod_peca,cod_serv) values
-(81,050,1056),
-(91,060,0057);
+(81,1,100),
+(91,2,103),
+(100,3,105);
+
+select * from peca;
+Select * from peca where nome like 'M%';
+
+select * from cliente where nome like 'M%';
+
+select especi from mao_de_obra,servico where servico.dataentrada between '10/05/2018' and '22/12/2018';
+
+Select * from peca where nome like '%de%';
+
+Select * from peca where cod_peca in(1,3);
+
+select * from peca where cod_peca between 1 and 3;
+
+select * from servico where cod_serv in (100,105);
+
+select especi from mao_de_obra where preco between 50 and 150;
+
+/*5) Mostrar código do serviço e defeito de todos os atendimentos do veiculo placa luw5554.*/
+
+select servico.cod_serv, descri from servico,veiculo where veiculo.placa like 'luw-5554%';
+
+
+
+
 
 /*1*/ select nome, endereco from cliente;
 
@@ -116,18 +148,18 @@ select mao_de_obra.cod_mao,peca.nome,servico.placa,servico.dataentrada
 
 /*10*/select nome from peca where quant < 10; 
 
-/*11*/select nome,telefone,modelo from cliente,veiculo where cliente.cod_clien = veiculo.cod_clien 
-and veiculo.ano = '2016';
+/*11 Mostrar o nome e telefone de todos os clientes que possuem carro do ano 2014.*/
+
+select c.nome, c.telefone from cliente c inner join veiculo v on c.cod_clien = v.cod_clien and v.ano = '2016';
 
 /*12*/select especi from mao_de_obra where cod_serv = 1056;
 
 /*13-  Mostrar o nome e telefone de todos os clientes que entraram com o carro para serviço no dia 15/01/2019.*/
 
-select nome,telefone, dataentrada from cliente,servico where servico.dataentrada = '10/05/2018';
 
-/*14*/ select nome, telefone ,  modelo from veiculo, cliente where veiculo.modelo = 'Mercedes-AMG G 63';
+/*14*/ 
 
-/*15*/select placa from veiculo,servico, mao_de_obra where veiculo.placa = servico.placa and mao_de_obra.cod_serv = servico.cod_serv ;
+/*15*/
 /*1) consultar nome e endereço de todos os clientes        OK
 
 2) consultar nome e endereço de todos os clientes que moram em jacarepagua   OK
@@ -167,4 +199,5 @@ no dia 10/05/2018.
 */
 
 drop database oficina;
+
 
